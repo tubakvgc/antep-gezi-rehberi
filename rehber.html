@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gaziantep Gezi Rehberim</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --kirmizi: #7A1A1A;
+    --koyu-kirmizi: #4D0E0E;
+    --altin: #C9932A;
+    --altin-acik: #F0D89A;
+    --krem: #FAF4E6;
+    --koyu: #2C1810;
+    --orta: #5A3D2B;
+    --acik-bg: #FFF9EE;
+  }
+
+  body { font-family: 'Lato', sans-serif; background: var(--krem); color: var(--koyu); }
+
+  /* ===== KAPAK ===== */
+  .kapak {
+    background: linear-gradient(170deg, #6B1A1A 0%, #3D0808 55%, #1A0404 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kapak::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 25%, rgba(201,147,42,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 75%, rgba(201,147,42,0.12) 0%, transparent 55%);
+  }
+  .kapak-icerik { position: relative; z-index: 1; }
+  .kapak-zeytun { font-size: 80px; margin-bottom: 24px; line-height: 1; }
+  .kapak h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(52px, 10vw, 80px);
+    color: #FAF4E6;
+    letter-spacing: 10px;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .kapak-alt {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(18px, 3vw, 24px);
+    color: var(--altin);
+    margin-bottom: 32px;
+  }
+  .kapak-cizgi {
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--altin), transparent);
+    margin: 0 auto 32px;
+  }
+  .kapak-etiketler { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+  .kapak-etiket {
+    border: 1px solid rgba(201,147,42,0.45);
+    background: rgba(201,147,42,0.1);
+    color: #E8C97A;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .kapak-not {
+    color: rgba(250,244,230,0.5);
+    font-size: 14px;
+    font-style: italic;
+    border-top: 1px solid rgba(201,147,42,0.2);
+    padding-top: 24px;
+    max-width: 420px;
+  }
+
+  /* ===== IÇERIK ===== */
+  .container { max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
+
+  /* Bölüm başlığı */
+  .bolum {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 60px 0 28px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--altin);
+  }
+  .bolum-ikon { font-size: 32px; }
+  .bolum-baslik {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    color: var(--kirmizi);
+  }
+
+  /* Yer Kartı */
+  .yer-kart {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 22px;
+    box-shadow: 0 3px 16px rgba(44,24,16,0.09);
+    display: grid;
+    grid-template-columns: 260px 1fr;
+  }
+  .yer-kart-img {
+    width: 260px;
+    height: 190px;
+    object-fit: cover;
+    display: block;
+  }
+  .yer-placeholder {
+    width: 260px;
+    height: 190px;
+    background: linear-gradient(135deg, #F0E0C0, #D4A870);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+  }
+  .yer-govde { padding: 22px 24px; display: flex; flex-direction: column; justify-content: space-between; }
+  .yer-baslik {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--koyu-kirmizi);
+    margin-bottom: 8px;
+  }
+  .yer-aciklama { font-size: 14px; color: var(--orta); line-height: 1.7; margin-bottom: 14px; }
+  .etiketler { display: flex; flex-wrap: wrap; gap: 7px; }
+  .etiket {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-weight: 700;
+  }
+  .etiket-sari { background: #FFF3D0; border: 1px solid #E0BF70; color: #7A5000; }
+  .etiket-kirmizi { background: #FFF0EF; border: 1px solid #F0AAAA; color: var(--kirmizi); }
+  .etiket-yesil { background: #EFFFF4; border: 1px solid #80D8A0; color: #1A5C30; }
+  .etiket-mavi { background: #EFF6FF; border: 1px solid #90BFF0; color: #1A3A6B; }
+
+  /* Ekstra bölüm (tavsiye kutusu) */
+  .tavsiye {
+    background: var(--acik-bg);
+    border-left: 4px solid var(--altin);
+    border-radius: 0 14px 14px 0;
+    padding: 14px 18px;
+    margin: 12px 0 0;
+    font-size: 13px;
+    color: var(--orta);
+    line-height: 1.6;
+  }
+  .tavsiye strong { color: var(--kirmizi); }
+
+  /* Yemek Grid */
+  .yemek-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 0;
+  }
+  .yemek-kart {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 3px 16px rgba(44,24,16,0.09);
+  }
+  .yemek-foto {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+  }
+  .yemek-foto-placeholder {
+    width: 100%;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+    background: linear-gradient(135deg, #F5E8C8, #D4A870);
+  }
+  .yemek-govde { padding: 16px 18px; }
+  .yemek-isim {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    color: var(--koyu-kirmizi);
+    margin-bottom: 4px;
+  }
+  .yemek-nerede {
+    font-size: 12px;
+    color: var(--altin);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .yemek-aciklama { font-size: 13px; color: var(--orta); line-height: 1.6; margin-bottom: 10px; }
+
+  /* Program */
+  .program-kutu {
+    background: linear-gradient(160deg, #4D0E0E, #2C0808);
+    border-radius: 24px;
+    padding: 40px;
+    margin: 60px 0 0;
+  }
+  .program-baslik {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--krem);
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .program-satir {
+    display: flex;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(201,147,42,0.18);
+    align-items: flex-start;
+  }
+  .program-satir:last-child { border-bottom: none; }
+  .program-saat {
+    font-size: 13px;
+    color: var(--altin);
+    font-weight: 700;
+    min-width: 110px;
+    padding-top: 1px;
+  }
+  .program-aktivite { font-size: 14.5px; color: var(--krem); line-height: 1.5; }
+
+  /* Checklist */
+  .checklist-kutu {
+    background: #fff;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 3px 16px rgba(44,24,16,0.09);
+    margin-top: 60px;
+  }
+  .checklist-baslik {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--kirmizi);
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .check-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--krem);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+  }
+  .check-item:hover { background: #F0E0C4; }
+  .check-item.tamam { background: #F0FFF5; }
+  .check-kutu {
+    width: 22px; height: 22px;
+    border-radius: 7px;
+    border: 2px solid var(--altin);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .check-item.tamam .check-kutu { background: #2A9A4A; border-color: #2A9A4A; }
+  .check-tik { color: white; font-size: 14px; display: none; font-weight: 700; }
+  .check-item.tamam .check-tik { display: block; }
+  .check-yazi { font-size: 13.5px; color: var(--koyu); transition: all 0.2s; }
+  .check-item.tamam .check-yazi { color: #2A7A40; text-decoration: line-through; }
+
+  /* Özel bölümler */
+  .ekstra-kart {
+    border-radius: 22px;
+    padding: 32px 36px;
+    margin-top: 30px;
+    display: flex;
+    gap: 22px;
+    align-items: flex-start;
+  }
+  .ekstra-yesil { background: linear-gradient(135deg, #163D24, #0A2214); }
+  .ekstra-mavi { background: linear-gradient(135deg, #0D2844, #060F1E); }
+  .ekstra-ikon { font-size: 46px; flex-shrink: 0; }
+  .ekstra-yesil h3 { font-family: 'Playfair Display', serif; font-size: 19px; color: #9AE6B0; margin-bottom: 10px; }
+  .ekstra-mavi h3 { font-family: 'Playfair Display', serif; font-size: 19px; color: #90C8F0; margin-bottom: 10px; }
+  .ekstra-yesil p { font-size: 13.5px; color: #C0E8D0; line-height: 1.7; }
+  .ekstra-mavi p { font-size: 13.5px; color: #B0D0F0; line-height: 1.7; }
+  .ekstra-etiketler { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .ekstra-etiket {
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 12px;
+  }
+  .ekstra-yesil .ekstra-etiket { background: rgba(154,230,176,0.12); border: 1px solid rgba(154,230,176,0.3); color: #9AE6B0; }
+  .ekstra-mavi .ekstra-etiket { background: rgba(144,200,240,0.12); border: 1px solid rgba(144,200,240,0.3); color: #90C8F0; }
+
+  /* ÖNEMLİ NOT bölümü */
+  .onemli-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 0; }
+  .onemli-kutu {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(44,24,16,0.07);
+    border-top: 4px solid var(--altin);
+  }
+  .onemli-baslik { font-weight: 700; color: var(--kirmizi); font-size: 14px; margin-bottom: 10px; }
+  .onemli-madde { font-size: 13px; color: var(--orta); line-height: 1.7; display: flex; gap: 8px; margin-bottom: 6px; }
+  .onemli-madde span:first-child { flex-shrink: 0; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 50px 20px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--kirmizi);
+  }
+
+  @media (max-width: 650px) {
+    .yer-kart { grid-template-columns: 1fr; }
+    .yer-kart-img, .yer-placeholder { width: 100%; height: 200px; }
+    .check-grid { grid-template-columns: 1fr; }
+    .onemli-grid { grid-template-columns: 1fr; }
+    .program-kutu { padding: 28px 20px; }
+    .checklist-kutu { padding: 28px 20px; }
+    .ekstra-kart { flex-direction: column; }
+    .yemek-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- KAPAK -->
+<div class="kapak">
+  <div class="kapak-icerik">
+    <div class="kapak-zeytun">🫒</div>
+    <h1>GAZİANTEP</h1>
+    <div class="kapak-alt">Kişisel Gezi Rehberim</div>
+    <div class="kapak-cizgi"></div>
+    <div class="kapak-etiketler">
+      <span class="kapak-etiket">Yemek</span>
+      <span class="kapak-etiket">Tarih</span>
+      <span class="kapak-etiket">Kültür</span>
+      <span class="kapak-etiket">Çarşı</span>
+      <span class="kapak-etiket">Müze</span>
+    </div>
+    <div class="kapak-not">Arkadaşlar gelince bu kitapçığa bakarak geziyoruz 📍<br>Her mekan, her lezzet tek tek yazılı.</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ===== TARİH & MAHALLE ===== -->
+  <div class="bolum">
+    <span class="bolum-ikon">🏛️</span>
+    <h2 class="bolum-baslik">Tarih & Mahalle Turu</h2>
+  </div>
+
+  <!-- Gaziantep Kalesi -->
+  <div class="yer-kart">
+    <img class="yer-kart-img"
+      src="https://turna.com/blog/wp-content/uploads/2022/10/gaziantep-kalesi-1.jpg"
+      alt="Gaziantep Kalesi"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="yer-placeholder" style="display:none">🏰</div>
+    <div class="yer-govde">
+      <div>
+        <div class="yer-baslik">🏰 Gaziantep Kalesi</div>
+        <div class="yer-aciklama">
+          Şehrin simgesi ve tam merkezinde yükselen bu kale, Roma döneminde gözetleme kulesi olarak başlamış; sonra Bizans ve Osmanlı dönemlerinde büyütülmüş. 12 kulesi ve iç bölümüyle gezilir. Burçlardan şehrin 360 derecelik manzarası açılır. Gündüz de gece de açık — ikisi de çok farklı güzel.
+        </div>
+        <div class="tavsiye"><strong>💡 Tavsiye:</strong> Gün batımı saatinde çık — kale altındaki Uzunçarşı'da yürüyüşle birleştir. Eğer zaman kalırsa kale dibindeki Çulcuoğlu'nda bir kebap ye.</div>
+      </div>
+      <div class="etiketler" style="margin-top:14px">
+        <span class="etiket etiket-sari">📸 Fotoğraf noktası</span>
+        <span class="etiket etiket-yesil">✅ Her gün açık</span>
+        <span class="etiket etiket-kirmizi">🎫 Küçük ücret var</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Beylerbeyi Mahallesi -->
+  <div class="yer-kart">
+    <img class="yer-kart-img"
+      src="https://mygaziantep.com/wp-content/uploads/2021/03/beylerbeyi-mahallesi-1.jpg"
+      alt="Beylerbeyi Mahallesi"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="yer-placeholder" style="display:none">🏘️</div>
+    <div class="yer-govde">
+      <div>
+        <div class="yer-baslik">🏘️ Beylerbeyi Mahallesi</div>
+        <div class="yer-aciklama">
+          Antep'in en özgün tarihi mahallesi. Taş döşeli dar sokaklar, yüksek duvarlı konutlar, tahta kapılar ve köşe başlarındaki çeşmeler. Sabah vakti neredeyse ıssız — o zaman gezmek bambaşka. Mimari detaylara bak: Antep evlerinin "liwan" dedikleri açık odalı taş avluları var.
+        </div>
+        <div class="tavsiye"><strong>💡 Tavsiye:</strong> Zeugma'ya gitmeden önce sabah erken Beylerbeyi'nde yürüyüş yap, sonra kahve molası ver, ardından müzeye geç — ayakların tutarsa ikisi birbirine çok yakın.</div>
+      </div>
+      <div class="etiketler" style="margin-top:14px">
+        <span class="etiket etiket-sari">🚶 Yürüyüş rotası</span>
+        <span class="etiket etiket-yesil">☀️ Sabah erken git</span>
+        <span class="etiket etiket-mavi">📷 Her köşe kare</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MÜZELER ===== -->
+  <div class="bolum">
+    <span class="bolum-ikon">🏺</span>
+    <h2 class="bolum-baslik">Müzeler</h2>
+  </div>
+
+  <!-- Zeugma -->
+  <div class="yer-kart">
+    <img class="yer-kart-img"
+      src="https://museumofwander.com/wp-content/uploads/2023/06/Zeugma-Mosaic-Museum-Gaziantep-Turkey.jpg"
+      alt="Zeugma Mozaik Müzesi"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="yer-placeholder" style="display:none">🎨</div>
+    <div class="yer-govde">
+      <div>
+        <div class="yer-baslik">🎨 Zeugma Mozaik Müzesi</div>
+        <div class="yer-aciklama">
+          Dünyanın ikinci büyük mozaik müzesi. Antik Zeugma kentinden kurtarılan eserler burada. "Çiğdem" (Gypsy Girl) mozaiği çok ünlü ama bence Mars ve Venüs mozaiği daha etkileyici. İki bina var — ikinci binada sesli rehber henüz yok. Müzeyi gerçekten görmek istiyorsan sesli rehber al (350₺ civarı).
+        </div>
+        <div class="tavsiye"><strong>⏰ Pratik:</strong> Hafta içi 08:30–17:00 (gişe 16:30 kapanır). En az 2-3 saat ayır. Yaz aylarında klimasıyla da nefes aldırıyor 😄</div>
+      </div>
+      <div class="etiketler" style="margin-top:14px">
+        <span class="etiket etiket-kirmizi">⏰ 2-3 saat</span>
+        <span class="etiket etiket-kirmizi">🎫 Ücretli</span>
+        <span class="etiket etiket-sari">🎧 Sesli rehber al</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emine Göğüş -->
+  <div class="yer-kart">
+    <img class="yer-kart-img"
+      src="https://www.bilet.com/wp-content/uploads/2022/02/gaziantep-emine-gogus-mutfak-muzesi.jpg"
+      alt="Emine Göğüş Mutfak Müzesi"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="yer-placeholder" style="display:none">🍳</div>
+    <div class="yer-govde">
+      <div>
+        <div class="yer-baslik">🍳 Emine Göğüş Mutfak Müzesi</div>
+        <div class="yer-aciklama">
+          Gaziantep mutfağının 400+ yıllık tarihini anlatan müze. Geleneksel mutfak aletleri, tarifler, sofra düzenleri, fırın ve tandır kültürü. UNESCO Gastronomi Şehri unvanını kazanan Antep için bu müze tam özü. Şehir merkezinden yürüme mesafesinde.
+        </div>
+        <div class="tavsiye"><strong>💡 Tavsiye:</strong> Müze çıkışı aç çıkarsın — hemen yanında iyi lokantalar var. Yöresel yemek yemeyi planla müzeden sonraya.</div>
+      </div>
+      <div class="etiketler" style="margin-top:14px">
+        <span class="etiket etiket-yesil">🚶 Merkeze yakın</span>
+        <span class="etiket etiket-sari">👨‍🍳 Gastronomi meraklısına</span>
+        <span class="etiket etiket-kirmizi">🕐 08:30–17:30</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Naib Hamam -->
+  <div class="yer-kart">
+    <img class="yer-kart-img"
+      src="https://gaziantepkulturelsanat.com/wp-content/uploads/2022/05/naip-hamami.jpg"
+      alt="Naib Hamam Müzesi"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="yer-placeholder" style="display:none">🛁</div>
+    <div class="yer-govde">
+      <div>
+        <div class="yer-baslik">🛁 Naib Hamam Müzesi</div>
+        <div class="yer-aciklama">
+          Osmanlı döneminden kalma taş hamam. Restore edilmiş ama orijinal kubbeleri ve göbek taşı korunmuş. Kısa ama çok güzel bir ziyaret — özellikle hamam mimarisine bak. Işığın kubbelerdeki deliklerden içeriye süzülüşü fotoğrafçılar için cennet.
+        </div>
+      </div>
+      <div class="etiketler" style="margin-top:14px">
+        <span class="etiket etiket-mavi">📷 Işık fotoğrafı</span>
+        <span class="etiket etiket-yesil">⚡ Kısa ziyaret</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BONUS MÜZE -->
+  <div class="yer-kart">
+    <div class="yer-placeholder">🏆</div>
+    <div class="yer-govde">
+      <div>
+        <div class="yer-baslik">🏆 Şahinbey Milli Mücadele Müzesi <span style="font-size:13px;color:var(--altin);font-style:italic;">(bonus)</span></div>
+        <div class="yer-aciklama">
+          Antep'in "Gazi" unvanını nasıl kazandığını anlatan müze. Kurtuluş Savaşı'nda 10 ay boyunca düşman kuvvetlerine karşı direnen şehrin hikayesi. Ziyaretçiler genellikle buradan çıkarken çok etkileniyor. Eklemeye değer bence — hem tarih hem duygu.
+        </div>
+      </div>
+      <div class="etiketler" style="margin-top:14px">
+        <span class="etiket etiket-mavi">🇹🇷 Kurtuluş Savaşı tarihi</span>
+        <span class="etiket etiket-sari">✨ Etkileyici</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ÇARŞILAR ===== -->
+  <div class="bolum">
+    <span class="bolum-ikon">🛒</span>
+    <h2 class="bolum-baslik">Çarşılar & Pazarlar</h2>
+  </div>
+
+  <!-- Bakırcılar -->
+  <div class="yer-kart">
+    <img class="yer-kart-img"
+      src="https://mygaziantep.com/wp-content/uploads/2020/11/bakırcilar-carsisi.jpg"
+      alt="Bakırcılar Çarşısı"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="yer-placeholder" style="display:none">🔨</div>
+    <div class="yer-govde">
+      <div>
+        <div class="yer-baslik">🔨 Bakırcılar Çarşısı</div>
+        <div class="yer-aciklama">
+          500 yıllık tarihe sahip çarşı. Ahşap süslemeli tek katlı dükkanlar, çekiç sesleri ve bakır kokusu — buraya girmek başlı başına bir deneyim. Ustalar hâlâ burada çalışıyor, izleyebilirsin. El yapımı bakır tepsi, ibrik, fincan, semaver... Yabancı turistlerin en sevdiği alışveriş durağı.
+        </div>
+        <div class="tavsiye"><strong>💡 Tavsiye:</strong> Sabahın erkeninde git — ustalar daha keyifli ve çarşı daha sakin. Fiyat pazarlığa kesinlikle açık.</div>
+      </div>
+      <div class="etiketler" style="margin-top:14px">
+        <span class="etiket etiket-sari">🪣 El yapımı bakır</span>
+        <span class="etiket etiket-mavi">💰 Pazarlık yap</span>
+        <span class="etiket etiket-yesil">📸 Fotoğraf cennet</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Elmacı Pazarı -->
+  <div class="yer-kart">
+    <img class="yer-kart-img"
+      src="https://img.youtube.com/vi/Kz37FAeGaKI/maxresdefault.jpg"
+      alt="Elmacı Pazarı Gaziantep"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="yer-placeholder" style="display:none">🌶️</div>
+    <div class="yer-govde">
+      <div>
+        <div class="yer-baslik">🌶️ Elmacı Pazarı</div>
+        <div class="yer-aciklama">
+          Antep'in en renkli ve en kokulu noktası. Baharatlar, isot biber, antep fıstığı, kuru meyveler, ev yapımı tarhana, zahter, karpuz çekirdeği... Arkadaşlara hediye için mükemmel adres. Yerli satıcıdan fıstık alırsan çok daha kaliteli ve ucuz.
+        </div>
+        <div class="tavsiye"><strong>🛍️ Alınacaklar:</strong> Antep fıstığı · İsot biber · Zahter · Antep sabunu · Ev yapımı tarhana · Pul biber</div>
+      </div>
+      <div class="etiketler" style="margin-top:14px">
+        <span class="etiket etiket-sari">🥜 Taze fıstık al</span>
+        <span class="etiket etiket-mavi">🎁 Hediye merkezi</span>
+        <span class="etiket etiket-yesil">🌈 Renkli ve canlı</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zincirli Bedesten - Bonus -->
+  <div class="yer-kart">
+    <div class="yer-placeholder">🏛️</div>
+    <div class="yer-govde">
+      <div>
+        <div class="yer-baslik">🏛️ Zincirli Bedesten <span style="font-size:13px;color:var(--altin);font-style:italic;">(bonus)</span></div>
+        <div class="yer-aciklama">
+          Gaziantep'in efsanevi beş bedesteninden günümüze kalan iki taneden biri. 18. yüzyılda inşa edilmiş, aslına uygun restore edilmiş taş mimarisi çok etkileyici. İçinde 70'ten fazla dükkan var. Bakırcılar'dan çok uzak değil, yolu üstü uğra.
+        </div>
+      </div>
+      <div class="etiketler" style="margin-top:14px">
+        <span class="etiket etiket-mavi">🏺 18. yüzyıl mimarisi</span>
+        <span class="etiket etiket-sari">🛍️ El sanatı dükkanları</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== YEMEK ===== -->
+  <div class="bolum">
+    <span class="bolum-ikon">🍽️</span>
+    <h2 class="bolum-baslik">Ne Yenir, Nerede Yenir?</h2>
+  </div>
+
+  <div class="yemek-grid">
+
+    <!-- Beyran -->
+    <div class="yemek-kart">
+      <img class="yemek-foto"
+        src="https://nefisyemektarifleri.com/wp-content/uploads/2021/02/Beyran-Corbasi-Gaziantep.jpg"
+        alt="Beyran Çorbası"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="yemek-foto-placeholder" style="display:none">🍲</div>
+      <div class="yemek-govde">
+        <div class="yemek-isim">Beyran Çorbası</div>
+        <div class="yemek-nerede">📍 Sakıp Usta</div>
+        <div class="yemek-aciklama">Antep'e özgü sabah çorbası. Kuzu eti, pirinç ve güçlü baharatlı et suyu. Sabah 07:00–10:00 arası git — saat 10:30'da genellikle biter. Yoğurt ve ekmekle birlikte yenir.</div>
+        <div class="etiketler">
+          <span class="etiket etiket-kirmizi">⚠️ Sabah 07–10!</span>
+          <span class="etiket etiket-sari">🥣 Yoğurtlu iç</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Katmer -->
+    <div class="yemek-kart">
+      <img class="yemek-foto"
+        src="https://lezzet.blob.core.windows.net/images-395x370/antep-katmeri-89b67a80-de00-4e4e-8c9c-ad3f1cef3bba.jpg"
+        alt="Katmer"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="yemek-foto-placeholder" style="display:none">🥐</div>
+      <div class="yemek-govde">
+        <div class="yemek-isim">Katmer</div>
+        <div class="yemek-nerede">📍 Metanet Lokantası</div>
+        <div class="yemek-aciklama">İnce açılmış hamur, antep fıstığı, kaymak. Gaziantep sabahının olmazsa olmazı. Metanet bu işin ustası — sabah 07:00'den itibaren. Çayla birlikte tam isabet.</div>
+        <div class="etiketler">
+          <span class="etiket etiket-yesil">🌅 Sabah kahvaltısı</span>
+          <span class="etiket etiket-sari">🥜 Fıstıklı</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menengiç -->
+    <div class="yemek-kart">
+      <img class="yemek-foto"
+        <img class="yemek-foto"
+        src="https://gezennanne.com/wp-content/uploads/2019/04/tahmis-kahvesi-gaziantep-1.jpg"
+        alt="Tahmis Kahvesi Menengiç"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="yemek-foto-placeholder" style="display:none">☕</div>
+      <div class="yemek-govde">
+        <div class="yemek-isim">Menengiç Kahvesi</div>
+        <div class="yemek-nerede">📍 Tahmis Kahvesi (1635'ten beri!)</div>
+        <div class="yemek-aciklama">Kafeinsiz, fıstıklı ve kremsi bir Güneydoğu içeceği. Tahmis'in tarihi 1650'lere kadar uzanıyor — içinde 500 yıllık lambalar ve eski fotoğraflar var. Atmosfer muhteşem.</div>
+        <div class="etiketler">
+          <span class="etiket etiket-mavi">🏺 Tarihi mekan</span>
+          <span class="etiket etiket-sari">☕ Kafeinsiz</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Yesemek -->
+    <div class="yemek-kart">
+      <div class="yemek-foto-placeholder">🏠</div>
+      <div class="yemek-govde">
+        <div class="yemek-isim">Geleneksel Ev Yemekleri</div>
+        <div class="yemek-nerede">📍 Yesemek</div>
+        <div class="yemek-aciklama">Analı kız, yuvalama, kaburga dolması, lebeniye, erik tavası. Bunları başka yerde bulmak çok zor. Gerçek Antep ev yemeklerini burası gibi yapan yer yok.</div>
+        <div class="etiketler">
+          <span class="etiket etiket-yesil">🏠 Ev lezzeti</span>
+          <span class="etiket etiket-mavi">🍲 Analı kız şart!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kebap -->
+    <div class="yemek-kart">
+      <img class="yemek-foto"
+        src="https://sofra.com/wp-content/uploads/2023/06/imam-cagdas-gaziantep.jpg"
+        alt="İmam Çağdaş Kebap"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="yemek-foto-placeholder" style="display:none">🔥</div>
+      <div class="yemek-govde">
+        <div class="yemek-isim">Antep Kebabı</div>
+        <div class="yemek-nerede">📍 İmam Çağdaş veya Metanet</div>
+        <div class="yemek-aciklama">Her ikisi de çok köklü. Lahmacun, ali nazik, patlıcanlı kebap, simit kebabı mutlaka dene. İmam Çağdaş'ta üst katı tercih et — manzaralı. Kale altındaki Çulcuoğlu da çok iyi alternatif.</div>
+        <div class="etiketler">
+          <span class="etiket etiket-kirmizi">🔥 Ali Nazik şart</span>
+          <span class="etiket etiket-sari">🫓 Lahmacun da al</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Baklava -->
+    <div class="yemek-kart">
+      <img class="yemek-foto"
+        src="https://images.tripadvisor.com/media/photo-s/1b/de/d0/6a/kocak-baklava.jpg"
+        alt="Koçak Baklava"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="yemek-foto-placeholder" style="display:none">🍯</div>
+      <div class="yemek-govde">
+        <div class="yemek-isim">Baklava</div>
+        <div class="yemek-nerede">📍 Koçak Baklava</div>
+        <div class="yemek-aciklama">Fıstıklı, bülbül yuvası, sütlü nuriye, şöbiyet. Sabah tazesi en lezzetlisi. Eve götürmek için mutlaka kutu baklava al — 1-2 kg sorun değil! İmam Çağdaş'ın da baklavası meşhur.</div>
+        <div class="etiketler">
+          <span class="etiket etiket-yesil">🌅 Sabah tazesi</span>
+          <span class="etiket etiket-sari">📦 Kutu al götür</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /yemek-grid -->
+
+  <!-- ===== ÖNEMLİ NOTLAR ===== -->
+  <div class="bolum">
+    <span class="bolum-ikon">📌</span>
+    <h2 class="bolum-baslik">Bilmemek Olmaz</h2>
+  </div>
+
+  <div class="onemli-grid">
+    <div class="onemli-kutu">
+      <div class="onemli-baslik">🌡️ Ne Zaman Gidilir?</div>
+      <div class="onemli-madde"><span>🌸</span><span>Bahar (Nisan–Mayıs): İdeal. Sıcak ama dayanılır.</span></div>
+      <div class="onemli-madde"><span>❄️</span><span>Kış (Aralık–Şubat): Soğuk ama kalabalık yok.</span></div>
+      <div class="onemli-madde"><span>🌞</span><span>Yaz: Kaçın. 45°C'ye çıkıyor — sokak gezmek zor.</span></div>
+    </div>
+    <div class="onemli-kutu">
+      <div class="onemli-baslik">🚗 Ulaşım</div>
+      <div class="onemli-madde"><span>🚌</span><span>Şehir merkezi yürüme mesafesinde — araç şart değil.</span></div>
+      <div class="onemli-madde"><span>🎫</span><span>Toplu taşıma için "Kart 27" lazım.</span></div>
+      <div class="onemli-madde"><span>🚗</span><span>Rumkale, Halfeti ve çevre için araç şart.</span></div>
+    </div>
+    <div class="onemli-kutu">
+      <div class="onemli-baslik">🛍️ Ne Alınır?</div>
+      <div class="onemli-madde"><span>🥜</span><span>Antep fıstığı — yerli satıcıdan al</span></div>
+      <div class="onemli-madde"><span>🌶️</span><span>İsot biber ve zahter</span></div>
+      <div class="onemli-madde"><span>🍯</span><span>Kutu baklava (taşıma poşeti veriyorlar)</span></div>
+      <div class="onemli-madde"><span>🪣</span><span>El yapımı bakır obje</span></div>
+    </div>
+    <div class="onemli-kutu">
+      <div class="onemli-baslik">🏨 Konaklama İpucu</div>
+      <div class="onemli-madde"><span>🏡</span><span>Zeynep Hanım Konağı — tarihi taş konak, avlulu, çok güzel.</span></div>
+      <div class="onemli-madde"><span>🏡</span><span>Anadolu Evleri — aynı şekilde tarihi ve otantik.</span></div>
+      <div class="onemli-madde"><span>📍</span><span>Merkezi kalırsan her yere yürüyerek gidebilirsin.</span></div>
+    </div>
+  </div>
+
+  <!-- ===== GÜN PLANI ===== -->
+  <div class="program-kutu">
+    <div class="program-baslik">🗓️ Önerilen Gün Planı</div>
+    <div class="program-satir"><div class="program-saat">06:45 – 07:00</div><div class="program-aktivite">🚶 Sakıp Usta'ya yürüyüş — erkenden yola çık</div></div>
+    <div class="program-satir"><div class="program-saat">07:00 – 08:00</div><div class="program-aktivite">🍲 <strong>Sakıp Usta'da beyran</strong> — saat 10:30'da biter, sakın geç kalma</div></div>
+    <div class="program-satir"><div class="program-saat">08:30 – 09:30</div><div class="program-aktivite">🥐 <strong>Metanet'te katmer</strong> & çay — Gaziantep sabahının özü</div></div>
+    <div class="program-satir"><div class="program-saat">09:30 – 10:15</div><div class="program-aktivite">☕ <strong>Tahmis Kahvesi'nde menengiç</strong> — tarihi atmosferde kısa mola</div></div>
+    <div class="program-satir"><div class="program-saat">10:15 – 11:30</div><div class="program-aktivite">🏘️ <strong>Beylerbeyi Mahallesi</strong> yürüyüşü — taş sokaklar, geleneksel evler</div></div>
+    <div class="program-satir"><div class="program-saat">11:30 – 14:00</div><div class="program-aktivite">🎨 <strong>Zeugma Mozaik Müzesi</strong> — sesli rehber al, acele etme</div></div>
+    <div class="program-satir"><div class="program-saat">14:00 – 15:00</div><div class="program-aktivite">🏠 <strong>Yesemek'te öğle yemeği</strong> — analı kız veya yuvalama söyle</div></div>
+    <div class="program-satir"><div class="program-saat">15:00 – 15:45</div><div class="program-aktivite">🏰 <strong>Gaziantep Kalesi</strong> — manzaraya bak, fotoğraf çek</div></div>
+    <div class="program-satir"><div class="program-saat">15:45 – 16:30</div><div class="program-aktivite">🍳 <strong>Emine Göğüş Mutfak Müzesi</strong></div></div>
+    <div class="program-satir"><div class="program-saat">16:30 – 17:00</div><div class="program-aktivite">🛁 <strong>Naib Hamam Müzesi</strong> — kısa ama etkili</div></div>
+    <div class="program-satir"><div class="program-saat">17:00 – 18:30</div><div class="program-aktivite">🔨 <strong>Bakırcılar Çarşısı</strong> → 🌶️ <strong>Elmacı Pazarı</strong> → alışveriş</div></div>
+    <div class="program-satir"><div class="program-saat">19:30 – 21:00</div><div class="program-aktivite">🔥 <strong>İmam Çağdaş veya Metanet'te akşam kebabı</strong> — ali nazik + lahmacun</div></div>
+    <div class="program-satir"><div class="program-saat">21:30</div><div class="program-aktivite">🍯 <strong>Koçak Baklava</strong> — gün sonu tatlı kapanışı + kutu baklava al eve</div></div>
+  </div>
+
+  <!-- ===== EKSTRA DURAKLAR ===== -->
+  <div class="bolum">
+    <span class="bolum-ikon">🗺️</span>
+    <h2 class="bolum-baslik">Şehir Dışı Rotalar</h2>
+  </div>
+
+  <div class="ekstra-kart ekstra-yesil">
+    <div class="ekstra-ikon">🏔️</div>
+    <div>
+      <h3>Rumkale — Fırat Kıyısında Tarihi Kale</h3>
+      <p>Roma döneminden kalma kale, Fırat Nehri'nin Birecik Barajı sularıyla çevrilmiş bir yarımadada. İçinde su sarnıçları, Aziz Nerses Kilisesi ve Barşavma Manastırı var. Baraj suları yükselince etrafı kısmen su altında kaldı — tekne turu yaparak görmek çok etkileyici. Halfeti üzerinden ulaşılır. Urfa'ya geçiş planlıyorsan yol üstü!</p>
+      <div class="ekstra-etiketler">
+        <span class="ekstra-etiket">🚗 Araç şart</span>
+        <span class="ekstra-etiket">⛵ Tekne turu yapılabilir</span>
+        <span class="ekstra-etiket">📍 Antep'e 1.5 saat</span>
+        <span class="ekstra-etiket">📸 Fotoğrafçıların gözdesi</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ekstra-kart ekstra-mavi">
+    <div class="ekstra-ikon">🏺</div>
+    <div>
+      <h3>Dülük Antik Kenti — Sürpriz Durak</h3>
+      <p>Şehir merkezine sadece 10 km. 600.000 yıllık yerleşim tarihi olan bu antik kent, dünyanın en büyük yeraltı tapınağı olan Mitras Tapınağı ile ünlü. Çivi yazıları, dini motifler, Hitit ve Pers izleri. Rehberli turla gezilmesi öneriliyor. Zeugma'yı sevdiysen burası da çok ilgini çekecek.</p>
+      <div class="ekstra-etiketler">
+        <span class="ekstra-etiket">📍 Merkeze 10 km</span>
+        <span class="ekstra-etiket">🏛️ 600.000 yıllık tarih</span>
+        <span class="ekstra-etiket">🧭 Rehberli tur öneriliyor</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== KONTROL LİSTESİ ===== -->
+  <div class="checklist-kutu">
+    <div class="checklist-baslik">✅ Gezi Kontrol Listesi</div>
+    <div class="check-grid" id="checklistGrid">
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Beylerbeyi Mahallesi</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Zeugma Mozaik Müzesi</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Gaziantep Kalesi</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Emine Göğüş Mutfak Müzesi</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Naib Hamam Müzesi</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Şahinbey Milli Mücadele Müzesi</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Elmacı Pazarı</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Bakırcılar Çarşısı</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Zincirli Bedesten</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Tahmis'te menengiç kahvesi</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Sakıp Usta'da beyran</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Metanet'te katmer</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Yesemek'te ev yemekleri</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">İmam Çağdaş / Metanet'te kebap</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Koçak Baklava</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Rumkale (2. gün veya Urfa yolunda)</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Dülük Antik Kenti</span></div>
+      <div class="check-item" onclick="isaretله(this)"><div class="check-kutu"><span class="check-tik">✓</span></div><span class="check-yazi">Antep fıstığı & isot aldım 🥜</span></div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<div class="footer">Afiyet olsun & iyi geziler! 🫒🍯</div>
+
+<script>
+function isaretله(el) {
+  el.classList.toggle('tamam');
+}
+</script>
+
+</body>
+</html>
